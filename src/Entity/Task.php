@@ -3,8 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\TaskRepository;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
-use Carbon\CarbonImmutable;
 
 #[ORM\Entity(repositoryClass: TaskRepository::class)]
 class Task
@@ -20,18 +20,24 @@ class Task
     #[ORM\Column]
     private ?bool $isDone = null;
 
-    #[ORM\Column]
-    private ?CarbonImmutable $created_at = null;
+    #[ORM\Column(type: Types::DATETIME_IMMUTABLE)]
+    private ?\DateTimeImmutable $created_at = null;
 
-    #[ORM\Column]
-    private ?CarbonImmutable $updated_at = null;
+    #[ORM\Column(type: Types::DATETIME_IMMUTABLE)]
+    private ?\DateTimeImmutable $updated_at = null;
 
-    #[ORM\Column(nullable: true)]
-    private ?CarbonImmutable $deleted_at = null;
+    #[ORM\Column(type: Types::DATETIME_IMMUTABLE, nullable: true)]
+    private ?\DateTimeImmutable $deleted_at = null;
 
     public function getId(): ?int
     {
         return $this->id;
+    }
+
+    public function setId(int $id): static
+    {
+        $this->id = $id;
+        return $this;
     }
 
     public function getTitle(): ?string
@@ -42,14 +48,6 @@ class Task
     public function setTitle(string $title): static
     {
         $this->title = $title;
-
-        return $this;
-    }
-
-    public function setId(int $id): static
-    {
-        $this->id = $id;
-
         return $this;
     }
 
@@ -61,43 +59,39 @@ class Task
     public function setIsDone(bool $isDone): static
     {
         $this->isDone = $isDone;
-
         return $this;
     }
 
-    public function getCreatedAt(): ?CarbonImmutable
+    public function getCreatedAt(): ?\DateTimeImmutable
     {
         return $this->created_at;
     }
 
-    public function setCreatedAt(CarbonImmutable $created_at): static
+    public function setCreatedAt(\DateTimeImmutable $createdAt): static
     {
-        $this->created_at = $created_at;
-
+        $this->created_at = $createdAt;
         return $this;
     }
 
-    public function getUpdatedAt(): ?CarbonImmutable
+    public function getUpdatedAt(): ?\DateTimeImmutable
     {
         return $this->updated_at;
     }
 
-    public function setUpdatedAt(CarbonImmutable $updated_at): static
+    public function setUpdatedAt(\DateTimeImmutable $updatedAt): static
     {
-        $this->updated_at = $updated_at;
-
+        $this->updated_at = $updatedAt;
         return $this;
     }
 
-    public function getDeletedAt(): ?CarbonImmutable
+    public function getDeletedAt(): ?\DateTimeImmutable
     {
         return $this->deleted_at;
     }
 
-    public function setDeletedAt(?CarbonImmutable $deleted_at): static
+    public function setDeletedAt(?\DateTimeImmutable $deletedAt): static
     {
-        $this->deleted_at = $deleted_at;
-
+        $this->deleted_at = $deletedAt;
         return $this;
     }
 }

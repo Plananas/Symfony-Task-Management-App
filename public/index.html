@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Task Manager</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 p-6">
+  <div class="max-w-md mx-auto mt-8">
+    <h2 class="text-xl font-bold mb-4">Task Tracker</h2>
+
+    <form id="task-form" class="mb-4 flex">
+      <input name="title" id="task-input" class="border p-2 flex-grow rounded-l" placeholder="New task..." required>
+      <button class="bg-blue-500 text-white px-4 py-2 rounded-r" type="submit">Add</button>
+    </form>
+
+    <ul id="task-list" class="bg-white shadow-md rounded p-4"></ul>
+  </div>
+
+  <script>
+    async function fetchTasks() {
+      // TODO Make the URL match an ENV file.
+      const res = await fetch('http://localhost:8080/tasks');
+      const tasks = await res.json();
+      const list = document.getElementById('task-list');
+      list.innerHTML = '';
+
+      tasks.forEach(task => {
+        const li = document.createElement('li');
+        li.className = 'flex justify-between items-center mb-2';
+
+        li.innerHTML = `
+          <span class="${task.isDone ? 'line-through text-gray-500' : ''}">${task.title}</span>
+          <div>
+            <button onclick="toggleTask(${task.id})" class="text-green-500">✔</button>
+            <button onclick="deleteTask(${task.id})" class="text-red-500 ml-2">🗑</button>
+          </div>
+        `;
+
+        list.appendChild(li);
+      });
+    }
+
+    async function toggleTask(id) {
+      await fetch(`http://localhost:8080/tasks/${id}/toggle`, { method: 'PATCH' });
+      fetchTasks();
+    }
+
+    async function deleteTask(id) {
+      await fetch(`/tasks/${id}`, { method: 'DELETE' });
+      fetchTasks();
+    }
+
+    document.getElementById('task-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const input = document.getElementById('task-input');
+      const title = input.value.trim();
+      if (!title) return;
+
+      const res = await fetch('http://localhost:8080/tasks', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ title })
+      });
+
+      if (!res.ok) {
+        alert('Failed to add task');
+        return;
+      }
+
+      input.value = '';
+      fetchTasks();
+    });
+
+
+    fetchTasks();
+  </script>
+</body>
+</html>

@@ -1,29 +1,35 @@
 <?php
 
+
 namespace App\Controller;
 
 use App\Repository\TaskRepository;
+use App\Entity\Task;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request; // ← You need this
 use Symfony\Component\Routing\Attribute\Route;
-use Carbon\CarbonImmutable;
+
 
 #[Route('/tasks')]
 final class TaskController extends AbstractController
 {
+
     #[Route('', name: 'tasks_index', methods: ['GET'])]
     public function index(TaskRepository $taskRepository): JsonResponse
     {
         $tasks = $taskRepository->findAllActive();
 
-        $data = array_map(fn(Task $task) => [
-            'id' => $task->getId(),
-            'title' => $task->getTitle(),
-            'isDone' => $task->isDone(),
-            'created_at' => $task->getCreatedAt()?->format('Y-m-d H:i:s'),
-            'updated_at' => $task->getUpdatedAt()?->format('Y-m-d H:i:s'),
-            'deleted_at' => $task->getDeletedAt()?->format('Y-m-d H:i:s'),
-        ], $tasks);
+        $data = array_map(function (Task $task): array {
+            return [
+                'id' => $task->getId(),
+                'title' => $task->getTitle(),
+                'isDone' => $task->isDone(),
+                'created_at' => $task->getCreatedAt()?->format('Y-m-d H:i:s'),
+                'updated_at' => $task->getUpdatedAt()?->format('Y-m-d H:i:s'),
+                'deleted_at' => $task->getDeletedAt()?->format('Y-m-d H:i:s'),
+            ];
+        }, $tasks);
 
         return $this->json($data);
     }
@@ -38,7 +44,7 @@ final class TaskController extends AbstractController
             return $this->json(['error' => 'Title is required'], 400);
         }
 
-        $now = CarbonImmutable::now();
+        $now = new \DateTimeImmutable();
         $task = (new Task())
             ->setTitle($title)
             ->setIsDone(false)

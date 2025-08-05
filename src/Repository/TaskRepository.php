@@ -5,7 +5,6 @@ namespace App\Repository;
 use App\Entity\Task;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
-use Carbon\CarbonImmutable;
 
 /**
  * @extends ServiceEntityRepository<Task>
@@ -28,38 +27,38 @@ class TaskRepository extends ServiceEntityRepository
 
     public function save(Task $task, bool $flush = true): void
     {
-        $this->_em->persist($task);
+        $this->getEntityManager()->persist($task);
         if ($flush) {
-            $this->_em->flush();
+            $this->getEntityManager()->flush();
         }
     }
 
     public function remove(Task $task, bool $flush = true): void
     {
-        $this->_em->remove($task);
+        $this->getEntityManager()->remove($task);
         if ($flush) {
-            $this->_em->flush();
+            $this->getEntityManager()->flush();
         }
     }
 
     public function softDelete(Task $task, bool $flush = true): void
     {
-        $now = CarbonImmutable::now();
+        $now = new \DateTimeImmutable();
         $task->setDeletedAt($now);
         $task->setUpdatedAt($now);
 
         if ($flush) {
-            $this->_em->flush();
+            $this->getEntityManager()->flush();
         }
     }
 
     public function toggle(Task $task, bool $flush = true): void
     {
         $task->setIsDone(!$task->isDone());
-        $task->setUpdatedAt(CarbonImmutable::now());
+        $task->setUpdatedAt(new \DateTimeImmutable());
 
         if ($flush) {
-            $this->_em->flush();
+            $this->getEntityManager()->flush();
         }
     }
 }
