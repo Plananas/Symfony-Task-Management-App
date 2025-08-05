@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Repository\TaskRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Carbon\CarbonImmutable;
 
 #[ORM\Entity(repositoryClass: TaskRepository::class)]
 class Task
@@ -20,13 +21,13 @@ class Task
     private ?bool $isDone = null;
 
     #[ORM\Column]
-    private ?\DateTimeImmutable $created_at = null;
+    private ?CarbonImmutable $created_at = null;
 
     #[ORM\Column]
-    private ?\DateTimeImmutable $updated_at = null;
+    private ?CarbonImmutable $updated_at = null;
 
     #[ORM\Column(nullable: true)]
-    private ?\DateTimeImmutable $deleted_at = null;
+    private ?CarbonImmutable $deleted_at = null;
 
     public function getId(): ?int
     {
@@ -64,36 +65,36 @@ class Task
         return $this;
     }
 
-    public function getCreatedAt(): ?\DateTimeImmutable
+    public function getCreatedAt(): ?CarbonImmutable
     {
         return $this->created_at;
     }
 
-    public function setCreatedAt(\DateTimeImmutable $created_at): static
+    public function setCreatedAt(CarbonImmutable $created_at): static
     {
         $this->created_at = $created_at;
 
         return $this;
     }
 
-    public function getUpdatedAt(): ?\DateTimeImmutable
+    public function getUpdatedAt(): ?CarbonImmutable
     {
         return $this->updated_at;
     }
 
-    public function setUpdatedAt(\DateTimeImmutable $updated_at): static
+    public function setUpdatedAt(CarbonImmutable $updated_at): static
     {
         $this->updated_at = $updated_at;
 
         return $this;
     }
 
-    public function getDeletedAt(): ?\DateTimeImmutable
+    public function getDeletedAt(): ?CarbonImmutable
     {
         return $this->deleted_at;
     }
 
-    public function setDeletedAt(?\DateTimeImmutable $deleted_at): static
+    public function setDeletedAt(?CarbonImmutable $deleted_at): static
     {
         $this->deleted_at = $deleted_at;
 
