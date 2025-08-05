@@ -7,9 +7,11 @@ services:
       dockerfile: docker/php/Dockerfile
     container_name: symfony_php
     volumes:
-      - .:/var/www/html
+      - .:/var/www/html:z
     depends_on:
       - db
+    env_file:
+      - .env
 
   nginx:
     image: nginx:alpine

@@ -17,8 +17,8 @@ class Task
     #[ORM\Column]
     private ?string $title = null;
 
-    #[ORM\Column]
-    private ?bool $isDone = null;
+    #[ORM\Column(options: ['default' => false])]
+    private ?bool $isDone = false;
 
     #[ORM\Column(type: Types::DATETIME_IMMUTABLE)]
     private ?\DateTimeImmutable $created_at = null;
@@ -56,9 +56,9 @@ class Task
         return $this->isDone;
     }
 
-    public function setIsDone(bool $isDone): static
+    public function setIsDone(?bool $isDone): static
     {
-        $this->isDone = $isDone;
+        $this->isDone = $isDone ?? false;
         return $this;
     }
 
